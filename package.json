@@ -1,0 +1,20 @@
+{
+  "name": "kmz-to-geojson",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "convert": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@mapbox/togeojson": "^0.16.2",
+    "adm-zip": "^0.5.16",
+    "fs": "^0.0.1-security",
+    "kml-to-geojson": "^1.0.13",
+    "togeojson": "^0.16.0",
+    "xmldom": "^0.6.0"
+  }
+}
