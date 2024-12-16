@@ -1,4 +1,4 @@
-# Instalación
+# Installation
 
 Node version 20.15.0
 
@@ -6,10 +6,18 @@ Node version 20.15.0
 npm install
 ```
 
-# Ejecución
+# Execution
 
-Ejecuta el siguiente comando, cambiando la ruta de los ficheros. Puedes usar rutas absolutas.
+### Run the following command, changing the path to the files. You can use absolute paths to import the kml or kmz file; but the output file will be created in the `./generatedGeojson` folder.
 
+You can just avoid the extension of the output file.
+
+#### Accept kmz files
 ```
-npm run convert -- archivo.kmz archivo_convertido.geojson
+npm run convert -- file.kmz file_convert.geojson
+```
+
+#### Accepts kml files
+```
+npm run convert -- file.kmz file_convert
 ```

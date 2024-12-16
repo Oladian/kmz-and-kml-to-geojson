@@ -4,31 +4,51 @@ const togeojson = require('@mapbox/togeojson')
 const path = require('path');
 const { DOMParser } = require('xmldom');
 
-// Convert KMZ to GeoJSON
-function kmzToGeojson(kmzFile, geojsonFile) {
-    const zip = new admZip(kmzFile);
-    const outputDir = path.join(__dirname, 'extracted_kmz');
-    zip.extractAllTo(outputDir, true);
+function kmzToGeojson(fileToConvert, geojsonFile) {
+    const kmlOutputDir = path.join(__dirname, 'extracted_kmz');
+    const geojsonOutputDir = './generatedGeojson';
 
-    const files = fs.readdirSync(outputDir);
-    const kmlFile = files.find((file) => file.endsWith('.kml'));
+    let zip;
+    let dom;
+    let kmlContent;
 
-    if (!kmlFile) {
-        console.error('KML file not found inside KMZ!');
-        return;
+    if (fileToConvert.indexOf('.kmz') !== -1) {
+        zip = new admZip(fileToConvert);
+        zip.extractAllTo(kmlOutputDir, true);
+
+        const files = fs.readdirSync(kmlOutputDir);
+        const kmlFile = files.find((file) => file.endsWith('.kml'));
+
+        if (!kmlFile) {
+            console.error('KML file not found inside KMZ!');
+            return;
+        }
+
+        kmlContent = fs.readFileSync(path.join(kmlOutputDir, kmlFile), 'utf8');
+        dom = new DOMParser().parseFromString(kmlContent, 'application/xml');
     }
 
-    const kmlContent = fs.readFileSync(path.join(outputDir, kmlFile), 'utf8');
+    if (fileToConvert.indexOf('.kml') !== -1) {
+        kmlContent = fs.readFileSync(fileToConvert, 'utf8');
+        dom = new DOMParser().parseFromString(kmlContent, 'application/xml');
+    }
 
     console.log("KML content:");
     console.log(kmlContent);
 
-    const dom = new DOMParser().parseFromString(kmlContent, 'application/xml');
     const geojson = togeojson.kml(dom);
 
-    fs.writeFileSync(geojsonFile, JSON.stringify(geojson, null, 2));
+    if (!fs.existsSync(geojsonOutputDir)) {
+        fs.mkdirSync(geojsonOutputDir);
+    }
 
-    console.log(`The KMZ file has been converted to ${geojsonFile} succesfully.`);
+    if (!geojsonFile.indexOf('.geojson') !== -1) {
+        geojsonFile = geojsonFile+'.geojson';
+    }
+
+    fs.writeFileSync(path.join(geojsonOutputDir, geojsonFile), JSON.stringify(geojson, null, 2));
+
+    console.log(`The file has been converted to ${geojsonFile} succesfully.\n\nYou can find it here ==> ${path.resolve(geojsonOutputDir+'/'+geojsonFile)}`);
 }
 
 const args = process.argv.slice(2);
@@ -40,5 +60,4 @@ if (!kmzFile || !geojsonFile) {
     process.exit(1);
 }
 
-// Execute the script
 kmzToGeojson(kmzFile, geojsonFile);
