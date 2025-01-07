@@ -15,7 +15,7 @@ npm install
 
 You can just avoid the extension of the output file.
 
-#### Accept kmz files
+#### Accepts kmz files
 ```
 npm run convert -- file.kmz file_convert.geojson
 ```
