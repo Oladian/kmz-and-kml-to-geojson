@@ -1,3 +1,6 @@
+# kmz-kml to geojson
+Convert KMZ or KML to GeoJSON
+
 # Installation
 
 Node version 20.15.0
